@@ -1,14 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Share2, RefreshCw } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import DocumentCard from '@/components/documents/DocumentCard';
+import SummaryModal from '@/components/documents/SummaryModal';
 import { useAuth, useIsAuthenticated } from '@/hooks/useAuth';
 import { useDocuments } from '@/hooks/useDocuments';
+import { Document } from '@/types';
 
 export default function SharedDocumentsPage() {
   const router = useRouter();
@@ -21,6 +23,14 @@ export default function SharedDocumentsPage() {
     error,
     fetchSharedDocuments,
   } = useDocuments();
+
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+
+  const handleSummarize = (doc: Document) => {
+    setSelectedDocument(doc);
+    setShowSummaryModal(true);
+  };
 
   useEffect(() => {
     fetchUser();
@@ -92,6 +102,7 @@ export default function SharedDocumentsPage() {
                 key={doc.id}
                 document={doc}
                 showOwner={true}
+                onSummarize={() => handleSummarize(doc)}
               />
             ))}
           </div>
@@ -122,6 +133,16 @@ export default function SharedDocumentsPage() {
             ))}
           </div>
         )}
+
+        {/* Summary Modal */}
+        <SummaryModal
+          isOpen={showSummaryModal}
+          onClose={() => {
+            setShowSummaryModal(false);
+            setSelectedDocument(null);
+          }}
+          document={selectedDocument}
+        />
       </main>
     </>
   );

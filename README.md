@@ -174,6 +174,7 @@ npm run test:e2e
 - **Document Upload**: Drag-and-drop file upload with progress
 - **Document Management**: View, rename, download, delete documents
 - **Document Sharing**: Share documents with other users with permission levels (view/edit)
+- **AI-Powered Summarization**: Generate concise summaries of documents using Google Gemini API (supports PDF, DOCX, and text files)
 - **Responsive Design**: Mobile-friendly UI with Tailwind CSS
 - **Security**: File encryption metadata, access control, secure headers
 

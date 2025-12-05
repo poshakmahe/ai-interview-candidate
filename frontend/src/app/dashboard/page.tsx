@@ -11,6 +11,7 @@ import Input from '@/components/ui/Input';
 import DocumentCard from '@/components/documents/DocumentCard';
 import UploadForm from '@/components/documents/UploadForm';
 import ShareDialog from '@/components/documents/ShareDialog';
+import SummaryModal from '@/components/documents/SummaryModal';
 import { useAuth, useIsAuthenticated } from '@/hooks/useAuth';
 import { useDocuments } from '@/hooks/useDocuments';
 import { Document } from '@/types';
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [newName, setNewName] = useState('');
 
@@ -69,6 +71,11 @@ export default function DashboardPage() {
     setSelectedDocument(doc);
     setNewName(doc.name);
     setShowRenameModal(true);
+  };
+
+  const handleSummarize = (doc: Document) => {
+    setSelectedDocument(doc);
+    setShowSummaryModal(true);
   };
 
   const handleRenameSubmit = async (e: React.FormEvent) => {
@@ -141,6 +148,7 @@ export default function DashboardPage() {
                 document={doc}
                 onShare={() => handleShare(doc)}
                 onRename={() => handleRename(doc)}
+                onSummarize={() => handleSummarize(doc)}
               />
             ))}
           </div>
@@ -236,6 +244,16 @@ export default function DashboardPage() {
             </div>
           </form>
         </Modal>
+
+        {/* Summary Modal */}
+        <SummaryModal
+          isOpen={showSummaryModal}
+          onClose={() => {
+            setShowSummaryModal(false);
+            setSelectedDocument(null);
+          }}
+          document={selectedDocument}
+        />
       </main>
     </>
   );

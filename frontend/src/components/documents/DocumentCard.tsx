@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { FileText, Download, Trash2, Share2, Edit3, MoreVertical } from 'lucide-react';
+import { FileText, Download, Trash2, Share2, Edit3, MoreVertical, Sparkles } from 'lucide-react';
 import { Document } from '@/types';
 import Button from '@/components/ui/Button';
 import { useDocuments } from '@/hooks/useDocuments';
@@ -11,10 +11,11 @@ interface DocumentCardProps {
   document: Document;
   onShare?: () => void;
   onRename?: () => void;
+  onSummarize?: () => void;
   showOwner?: boolean;
 }
 
-const DocumentCard = ({ document, onShare, onRename, showOwner = false }: DocumentCardProps) => {
+const DocumentCard = ({ document, onShare, onRename, onSummarize, showOwner = false }: DocumentCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const { deleteDocument, downloadDocument, isLoading } = useDocuments();
 
@@ -124,6 +125,18 @@ const DocumentCard = ({ document, onShare, onRename, showOwner = false }: Docume
                     >
                       <Share2 className="h-4 w-4 mr-2" />
                       Share
+                    </button>
+                  )}
+                  {onSummarize && (
+                    <button
+                      onClick={() => {
+                        onSummarize();
+                        setShowMenu(false);
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-primary-600 hover:bg-primary-50"
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Summarize
                     </button>
                   )}
                   {!showOwner && (

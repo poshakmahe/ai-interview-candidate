@@ -155,6 +155,45 @@ class ApiService {
       return false;
     }
   }
+
+  // Summarize document
+  async summarizeDocument(documentId: string): Promise<{ summary: string }> {
+    // First download the document content
+    const blob = await this.downloadDocument(documentId);
+    const text = await this.extractTextFromBlob(blob);
+
+    // Call the summarize API route
+    const response = await axios.post<{ summary: string }>('/api/summarize', {
+      text,
+      documentId,
+    });
+    return response.data;
+  }
+
+  private async extractTextFromBlob(blob: Blob): Promise<string> {
+    const mimeType = blob.type;
+
+    // Handle plain text files
+    if (mimeType.startsWith('text/') || mimeType === 'application/json') {
+      return await blob.text();
+    }
+
+    // For PDF and DOCX, we'll send the blob to a text extraction endpoint
+    // Since we can't easily extract text client-side without heavy libraries
+    // We'll handle this in the summarize API route instead
+    if (mimeType === 'application/pdf' ||
+        mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      // Convert blob to base64 for sending to API
+      const arrayBuffer = await blob.arrayBuffer();
+      const base64 = btoa(
+        new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
+      return `__BINARY_DOCUMENT__:${mimeType}:${base64}`;
+    }
+
+    // Default: try to read as text
+    return await blob.text();
+  }
 }
 
 export const api = new ApiService();

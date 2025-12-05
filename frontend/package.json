@@ -25,7 +25,9 @@
     "lucide-react": "^0.312.0",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.0",
-    "date-fns": "^3.3.0"
+    "date-fns": "^3.3.0",
+    "pdf-parse": "^1.1.1",
+    "mammoth": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.5",

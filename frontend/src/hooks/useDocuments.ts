@@ -7,6 +7,7 @@ interface DocumentsState {
   sharedDocuments: Document[];
   selectedDocument: Document | null;
   isLoading: boolean;
+  isSummarizing: boolean;
   error: string | null;
   pagination: {
     page: number;
@@ -29,6 +30,7 @@ interface DocumentsState {
   deleteDocument: (id: string) => Promise<void>;
   shareDocument: (id: string, email: string, permission: 'view' | 'edit') => Promise<void>;
   downloadDocument: (id: string, filename: string) => Promise<void>;
+  summarizeDocument: (id: string) => Promise<string>;
   clearError: () => void;
   setSelectedDocument: (document: Document | null) => void;
 }
@@ -38,6 +40,7 @@ export const useDocuments = create<DocumentsState>((set, get) => ({
   sharedDocuments: [],
   selectedDocument: null,
   isLoading: false,
+  isSummarizing: false,
   error: null,
   pagination: {
     page: 1,
@@ -183,6 +186,19 @@ export const useDocuments = create<DocumentsState>((set, get) => ({
     } catch (error: any) {
       set({ error: error.response?.data?.message || 'Failed to download document' });
       throw error;
+    }
+  },
+
+  summarizeDocument: async (id: string) => {
+    set({ isSummarizing: true, error: null });
+    try {
+      const result = await api.summarizeDocument(id);
+      set({ isSummarizing: false });
+      return result.summary;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Failed to summarize document';
+      set({ error: errorMessage, isSummarizing: false });
+      throw new Error(errorMessage);
     }
   },
 
