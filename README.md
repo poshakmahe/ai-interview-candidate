@@ -205,4 +205,3 @@ This repository is designed for technical interviews. Candidates should:
 4. **Have Claude Code or similar AI assistant** ready to use
 5. Be prepared to **demonstrate problem-solving** using AI tools
 
-See [INTERVIEW_GUIDE.md](./INTERVIEW_GUIDE.md) for interviewer instructions and question sets.
